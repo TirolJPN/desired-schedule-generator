@@ -1,34 +1,13 @@
-# desired-schedule-generator
+# Desired Schedule Generator
 
-## Project setup
-```
-npm install
-```
+## Overview
+Desired Schedule Generator is an Web client App to generate your free time list.
+For example, isn't it inconviniense to check your free time on calendar to tell the interviewer your schedule?
+This App decrease your wasting time to check your calendor using information of your google calendar.
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
+## Limitations
+Maybe work on any browser.
 
-### Compiles and minifies for production
-```
-npm run build
-```
+## When is it released?
+To be developed.
 
-### Run your tests
-```
-npm run test
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Run your unit tests
-```
-npm run test:unit
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
