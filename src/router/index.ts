@@ -28,6 +28,6 @@ export default router
 
 router.afterEach(
   (to, from) => {
-    console.log(from.fullPath + 'から' + to.fullPath + 'に呼ばれました')
+    console.log('Called from ' + from.fullPath + ' to ' + to.fullPath)
   }
 )
