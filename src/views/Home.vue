@@ -1,17 +1,17 @@
 <template>
   <div class="home">
-    <MyButton></MyButton>
+    <VueCtkDateTimePicker></VueCtkDateTimePicker>
   </div>
 </template>
 
 <script lang="ts">
 // @ is an alias to /src
 import { Component, Vue } from 'vue-property-decorator'
-import MyButton from '@/components/MyButton.vue'
+import VueCtkDateTimePicker from '@/components/VueCtkDateTimePicker.vue'
 
 @Component({
   components: {
-    MyButton
+    VueCtkDateTimePicker
   }
 })
 

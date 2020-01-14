@@ -15,6 +15,6 @@ const VueCtkDateTimePicker = require('vue-ctk-date-time-picker')
   }
 })
 export default class Mybutton extends Vue {
-  public ts = { 'start': '2018-04-09', 'end': '2018-04-10' }
+  public ts = { 'start': '2019-04-09', 'end': '2019-04-10' }
 }
 </script>
