@@ -1,6 +1,6 @@
 <template>
 <div>
-  <VueCtkDateTimePicker v-model="selectedDay" v-bind:format="dateFormat" v-bind:formatted="dateFormatted"/>
+  <VueCtkDateTimePicker v-model="selectedDay" v-bind:format="dateFormat" v-bind:formatted="dateFormatted" v-bind:onlyDate="true"/>
 </div>
 </template>
 
@@ -8,10 +8,6 @@
 import { Component, Vue } from 'vue-property-decorator'
 import 'vue-ctk-date-time-picker/dist/vue-ctk-date-time-picker.css'
 const VueCtkDateTimePicker = require('vue-ctk-date-time-picker')
-
-interface selectedDay{
-  day: String
-}
 
 @Component({
   components: {
@@ -22,6 +18,6 @@ interface selectedDay{
 export default class VueCtkDateTime extends Vue {
   dateFormat:String = 'YYYY-MM-DD'
   dateFormatted:String = 'll'
-  selectedDay:selectedDay = { day: '' }
+  selectedDay:String = ''
 }
 </script>
