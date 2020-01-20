@@ -1,7 +1,7 @@
 <template>
 <div>
-  <p>{{ts}}</p>
-  <VueCtkDateTimePicker v-model="ts" v-bind:range="true" v-bind:only-date="true" />
+  <p>{{selectedRange}}</p>
+  <VueCtkDateTimePicker v-model="selectedRange" v-bind:format="dateFormat" v-bind:formatted="ll" v-bind:range="true"/>
 </div>
 </template>
 
@@ -10,9 +10,13 @@ import { Component, Vue } from 'vue-property-decorator'
 import 'vue-ctk-date-time-picker/dist/vue-ctk-date-time-picker.css'
 const VueCtkDateTimePicker = require('vue-ctk-date-time-picker')
 
-interface HogeDatapicker{
+interface DatepickerParams{
   start: string,
   end: string
+}
+
+interface ExclodedDateList{
+  dataList: [DatepickerParams]
 }
 
 @Component({
@@ -22,6 +26,7 @@ interface HogeDatapicker{
 })
 
 export default class VueCtkDateTime extends Vue {
-  ts:HogeDatapicker = { start: '2019-04-09', end: '2019-04-30' }
+  dateFormat:String = 'YYYY-MM-DD'
+  selectedRange:DatepickerParams = { start: '2019-04-09', end: '2019-04-30' }
 }
 </script>
