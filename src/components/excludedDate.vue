@@ -1,7 +1,6 @@
 <template>
 <div>
-  <p>{{selectedRange}}</p>
-  <VueCtkDateTimePicker v-model="selectedRange" v-bind:format="dateFormat" v-bind:formatted="ll" v-bind:range="true"/>
+  <VueCtkDateTimePicker v-model="selectedDay" v-bind:format="dateFormat" v-bind:formatted="dateFormatted"/>
 </div>
 </template>
 
@@ -10,13 +9,8 @@ import { Component, Vue } from 'vue-property-decorator'
 import 'vue-ctk-date-time-picker/dist/vue-ctk-date-time-picker.css'
 const VueCtkDateTimePicker = require('vue-ctk-date-time-picker')
 
-interface DatepickerParams{
-  start: string,
-  end: string
-}
-
-interface ExclodedDateList{
-  dataList: [DatepickerParams]
+interface selectedDay{
+  day: String
 }
 
 @Component({
@@ -27,6 +21,7 @@ interface ExclodedDateList{
 
 export default class VueCtkDateTime extends Vue {
   dateFormat:String = 'YYYY-MM-DD'
-  selectedRange:DatepickerParams = { start: '2019-04-09', end: '2019-04-30' }
+  dateFormatted:String = 'll'
+  selectedDay:selectedDay = { day: '' }
 }
 </script>
