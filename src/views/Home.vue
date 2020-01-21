@@ -1,12 +1,27 @@
 <template>
   <div class="home">
     <h1>Desired Schedule Generator</h1>
-    <div>
+    <p v-if="!areStartAndEndingTimesValid" class="error-message">{{errorTimeMessage}}</p>
+    <div class="picker">
+      <!-- to pick date range -->
       <VueCtkDateTimePicker
-        v-model="selectedRange" v-bind:label="label"
-        v-bind:format="dateFormat" v-bind:formatted="dateFormatted" v-bind:range="true"
+        id="date-range-picker"
+        v-model="selectedRange" v-bind:label="'Select date range'"
+        v-bind:format="'YYYY-MM-DD'" v-bind:formatted="'ll'" v-bind:range="true"
+      />
+      <!-- to pick time range -->
+      <VueCtkDateTimePicker
+        id="start-time-picker" v-bind:label="'Select start time'"
+        v-model="startTime" v-bind:no-label="true" v-bind:only-time="true"
+        v-bind:format="'hh:mm a'" v-bind:formatted="'hh:mm a'" v-bind:minute-interval="10"
+      />
+      <VueCtkDateTimePicker
+        id="ending-time-picker" v-bind:label="'Select ending time'"
+        v-model="endingTime" v-bind:no-label="true" v-bind:only-time="true"
+        v-bind:format="'hh:mm a'" v-bind:formatted="'hh:mm a'" v-bind:minute-interval="10"
       />
     </div>
+    <br><br><br>
     <!-- v-for of ExcludedDate components -->
     <div v-if="isSelectedDate">
       <ExcludedDate v-bind:enabledDates="enabledDates"/>
@@ -46,10 +61,11 @@ export default class Home extends Vue {
   /**
    * data
    */
-  dateFormat:String = 'YYYY-MM-DD'
-  dateFormatted:String = 'll'
-  label:String = 'Select date range'
-  selectedRange:DatepickerParams = { start: '2000-01-01', end: '2000-01-01' }
+  selectedRange:DatepickerParams = { start: '', end: '' }
+  startTime:string = ''
+  endingTime:string = ''
+  idList:number[] = []
+  errorTimeMessage:string = ''
 
   mounted () {
     let dt = new Date()
@@ -82,6 +98,29 @@ export default class Home extends Vue {
       day = new Date(tmp)
     }
     return result
+  }
+
+  get areStartAndEndingTimesValid () {
+    const checkValue = (s: string) => {
+      return s !== '' && s !== null
+    }
+    const getTimeNumber = (s: string) => {
+      const tmp = s.split(' ')
+      const h = Number(tmp[0].split(':')[0])
+      const m = Number(tmp[0].split(':')[1])
+      const ap = tmp[1] === '午前' ? 0 : 1
+      return h * 60 + m + ap * 12 * 60
+    }
+    if (!checkValue(this.startTime) || !checkValue(this.endingTime)) {
+      this.errorTimeMessage = 'Fill start and ending time'
+      return false
+    } else if (getTimeNumber(this.startTime) < getTimeNumber(this.endingTime)) {
+      this.errorTimeMessage = ''
+      return true
+    } else {
+      this.errorTimeMessage = 'Incorrect start and ending time'
+      return false
+    }
   }
 }
 </script>

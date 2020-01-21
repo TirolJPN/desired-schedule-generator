@@ -1,6 +1,10 @@
 button:focus {
   outline: 0;
- }
+}
+
+.picker {
+  display: flex;
+}
  
 .add-exlclude-date-button {
   border: none;

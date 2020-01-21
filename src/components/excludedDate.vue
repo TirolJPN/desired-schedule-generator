@@ -1,7 +1,7 @@
 <template>
 <div>
   <VueCtkDateTimePicker
-    v-model="selectedDay" v-bind:enabledDates="enabledDates" v-bind:format="dateFormat" v-bind:formatted="dateFormatted" v-bind:onlyDate="true"
+    v-model="selectedDay" v-bind:enabledDates="enabledDates" v-bind:format="'YYYY-MM-DD'" v-bind:formatted="'ll'" v-bind:onlyDate="true"
   />
 </div>
 </template>
@@ -18,11 +18,10 @@ const VueCtkDateTimePicker = require('vue-ctk-date-time-picker')
 })
 
 export default class VueCtkDateTime extends Vue {
+  @Prop({ default: -1 })
+  id!: number
   @Prop({ default: [] })
   enabledDates!: string[]
-
-  dateFormat:String = 'YYYY-MM-DD'
-  dateFormatted:String = 'll'
   selectedDay:String = ''
 }
 </script>
