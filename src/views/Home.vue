@@ -27,13 +27,18 @@
     <!-- v-for of ExcludedDate components -->
     <div v-if="areSelectedDates && areStartAndEndingTimesValid">
       <h2>Pick up  your not desired schedule date and time range</h2>
-      <div v-for="id in idList" :key="id">
-        <ExcludedDate v-bind:key="id" v-bind:id="id" v-bind:enabledDates="enabledDates" v-bind:disabledHours="disabledHours" />
-      </div>
-      <button class="add-exlclude-date-button" v-on:click="addIdList">
+      <ExcludedDate
+        v-for="(ExcludedDateElm, index) in ExcludedDates" :key="ExcludedDateElm.id"
+        :value="ExcludedDates[index]" @input="ExcludedDates => updateExcludedDates(ExcludedDates, index)" v-bind:enabledDates="enabledDates"
+      />
+      <button class="add-exlclude-date-button" v-on:click="addExcludedDate">
         <i class="fas fa-plus"></i>
         Add Excluded Date
       </button>
+
+      <h3>for debug</h3>
+      <p>enabledDates:{{enabledDates}}</p>
+      <p>ExcludedDates:{{ExcludedDates}}</p>
     </div>
   </div>
 </template>
@@ -50,6 +55,12 @@ interface DatepickerParams{
   start: string,
   end: string
 }
+interface ExcludedDateParams{
+  id: number,
+  selectedDay:string,
+  startTime:string,
+  endingTime:string,
+}
 
 @Component({
   components: {
@@ -62,11 +73,11 @@ export default class Home extends Vue {
   /**
    * data
    */
+  errorTimeMessage:string = ''
   selectedRange:DatepickerParams = { start: '', end: '' }
   startTime:string = ''
   endingTime:string = ''
-  idList:number[] = []
-  errorTimeMessage:string = ''
+  ExcludedDates:ExcludedDateParams[] = []
 
   mounted () {
     // let dt = new Date()
@@ -81,8 +92,15 @@ export default class Home extends Vue {
   /**
    * methods
    */
-  addIdList () {
-    this.idList.push(Math.max.apply(null, this.idList))
+  addExcludedDate () {
+    // Math.max.apply(null,gGpsData.map(function(o){return o.speed;}))
+    let id = this.ExcludedDates.length === 0 ? 0 : Math.max.apply(null, this.ExcludedDates.map((elm) => { return elm.id }))
+    this.ExcludedDates.push({
+      id: id + 1,
+      selectedDay: '',
+      startTime: '',
+      endingTime: ''
+    })
   }
 
   getTimeNumber = (s: string) => {
@@ -91,6 +109,14 @@ export default class Home extends Vue {
     const m = Number(tmp[0].split(':')[1])
     const ap = tmp[1] === '午前' ? 0 : 1
     return h * 60 + m + ap * 12 * 60
+  }
+
+  updateExcludedDates = (item:ExcludedDateParams[], index:number) => {
+    const newValue = [
+      ...this.ExcludedDates.slice(0, index), item,
+      ...this.ExcludedDates.slice(index + 1)
+    ]
+    this.$emit('input', newValue)
   }
 
   /**
@@ -133,17 +159,8 @@ export default class Home extends Vue {
     }
   }
 
-  get disabledHours () {
-    const disabledHours:string[] = []
-    const hours:number[] = Array.from(new Array(24)).map((v, i) => i)
-    const start = this.getTimeNumber(this.startTime)
-    const ending = this.getTimeNumber(this.endingTime)
-    for (let elm in hours) {
-      if ((Number(elm) * 60 < start || ending < Number(elm) * 60)) {
-        disabledHours.push(('00' + Number(elm)).slice(-2))
-      }
-    }
-    return disabledHours
+  get hoge () {
+    return ''
   }
 }
 </script>

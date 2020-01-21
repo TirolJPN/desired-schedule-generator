@@ -9,12 +9,12 @@
     <VueCtkDateTimePicker
       id="start-time-picker" v-bind:label="'Select start time'"
       v-model="startTime" v-bind:no-label="true" v-bind:only-time="true"
-      v-bind:format="'hh:mm a'" v-bind:formatted="'hh:mm a'" v-bind:minute-interval="10" v-bind:disabledHours="disabledHours"
+      v-bind:format="'hh:mm a'" v-bind:formatted="'hh:mm a'" v-bind:minute-interval="10"
     />
     <VueCtkDateTimePicker
       id="ending-time-picker" v-bind:label="'Select ending time'"
       v-model="endingTime" v-bind:no-label="true" v-bind:only-time="true"
-      v-bind:format="'hh:mm a'" v-bind:formatted="'hh:mm a'" v-bind:minute-interval="10" v-bind:disabledHours="disabledHours"
+      v-bind:format="'hh:mm a'" v-bind:formatted="'hh:mm a'" v-bind:minute-interval="10"
     />
   </div>
 </div>
@@ -26,6 +26,13 @@ import 'vue-ctk-date-time-picker/dist/vue-ctk-date-time-picker.css'
 import '@/assets/stylesheets/excludedDate.css'
 const VueCtkDateTimePicker = require('vue-ctk-date-time-picker')
 
+interface ExcludedDateParams{
+  id: number,
+  selectedDay:string,
+  startTime:string,
+  endingTime:string,
+}
+
 @Component({
   components: {
     VueCtkDateTimePicker
@@ -33,12 +40,10 @@ const VueCtkDateTimePicker = require('vue-ctk-date-time-picker')
 })
 
 export default class VueCtkDateTime extends Vue {
-  @Prop({ default: -1 })
-  id!: number
   @Prop({ default: [] })
   enabledDates!: string[]
-  @Prop({ default: [] })
-  disabledHours!: string[]
+  @Prop({ default: () => [] })
+  ExcludedDates!:ExcludedDateParams[]
 
   /**
    * data
