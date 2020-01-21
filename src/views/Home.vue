@@ -2,11 +2,14 @@
   <div class="home">
     <h1>Desired Schedule Generator</h1>
     <div>
-      <VueCtkDateTimePicker v-model="selectedRange" v-bind:label="label" v-bind:format="dateFormat" v-bind:formatted="dateFormatted" v-bind:range="true"/>
+      <VueCtkDateTimePicker
+        v-model="selectedRange" v-bind:label="label"
+        v-bind:format="dateFormat" v-bind:formatted="dateFormatted" v-bind:range="true"
+      />
     </div>
+    <!-- v-for of ExcludedDate components -->
     <div v-if="isSelectedDate">
-      <!-- v-for of ExcludedDate components -->
-      <ExcludedDate/>
+      <ExcludedDate v-bind:enabledDates="enabledDates"/>
       <p>{{enabledDates}}</p>
       <button class="add-exlclude-date-button">
         <i class="fas fa-plus"></i>
