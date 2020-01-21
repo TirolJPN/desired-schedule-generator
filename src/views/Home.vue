@@ -1,8 +1,10 @@
 <template>
   <div class="home">
     <h1>Desired Schedule Generator</h1>
+    <h2>Pick up  your desired schedule date and time range</h2>
+    <p v-if="!areSelectedDates" class="error-message">Fill correct date range</p>
     <p v-if="!areStartAndEndingTimesValid" class="error-message">{{errorTimeMessage}}</p>
-    <div class="picker">
+    <div class="home-picker">
       <!-- to pick date range -->
       <VueCtkDateTimePicker
         id="date-range-picker"
@@ -13,7 +15,7 @@
       <VueCtkDateTimePicker
         id="start-time-picker" v-bind:label="'Select start time'"
         v-model="startTime" v-bind:no-label="true" v-bind:only-time="true"
-        v-bind:format="'hh:mm a'" v-bind:formatted="'hh:mm a'" v-bind:minute-interval="10"
+        v-bind:format="'hh:mm a'"  v-bind:formatted="'hh:mm a'" v-bind:minute-interval="10"
       />
       <VueCtkDateTimePicker
         id="ending-time-picker" v-bind:label="'Select ending time'"
@@ -21,18 +23,17 @@
         v-bind:format="'hh:mm a'" v-bind:formatted="'hh:mm a'" v-bind:minute-interval="10"
       />
     </div>
-    <br><br><br>
+
     <!-- v-for of ExcludedDate components -->
-    <div v-if="isSelectedDate">
-      <ExcludedDate v-bind:enabledDates="enabledDates"/>
-      <p>{{enabledDates}}</p>
-      <button class="add-exlclude-date-button">
+    <div v-if="areSelectedDates && areStartAndEndingTimesValid">
+      <h2>Pick up  your not desired schedule date and time range</h2>
+      <div v-for="id in idList" :key="id">
+        <ExcludedDate v-bind:key="id" v-bind:id="id" v-bind:enabledDates="enabledDates" v-bind:disabledHours="disabledHours" />
+      </div>
+      <button class="add-exlclude-date-button" v-on:click="addIdList">
         <i class="fas fa-plus"></i>
-        Add Exclude Date
+        Add Excluded Date
       </button>
-    </div>
-    <div v-else>
-      <p class="error-message">Please fill correct range</p>
     </div>
   </div>
 </template>
@@ -68,18 +69,34 @@ export default class Home extends Vue {
   errorTimeMessage:string = ''
 
   mounted () {
-    let dt = new Date()
-    let y = dt.getFullYear()
-    let m = ('00' + (dt.getMonth() + 1)).slice(-2)
-    let d = ('00' + dt.getDate()).slice(-2)
-    this.selectedRange.start = y + '-' + m + '-' + d
-    this.selectedRange.end = y + '-' + m + '-' + d
+    // let dt = new Date()
+    // let y = dt.getFullYear()
+    // let m = ('00' + (dt.getMonth() + 1)).slice(-2)
+    // let d = ('00' + dt.getDate()).slice(-2)
+    // this.selectedRange.start = y + '-' + m + '-' + d
+    // this.selectedRange.end = y + '-' + m + '-' + d
+    // this.idList.push(0)
+  }
+
+  /**
+   * methods
+   */
+  addIdList () {
+    this.idList.push(Math.max.apply(null, this.idList))
+  }
+
+  getTimeNumber = (s: string) => {
+    const tmp = s.split(' ')
+    const h = Number(tmp[0].split(':')[0])
+    const m = Number(tmp[0].split(':')[1])
+    const ap = tmp[1] === '午前' ? 0 : 1
+    return h * 60 + m + ap * 12 * 60
   }
 
   /**
    * computed
    */
-  get isSelectedDate () {
+  get areSelectedDates () {
     const checkValue = (s: string) => {
       return s !== '' && s !== null
     }
@@ -104,23 +121,29 @@ export default class Home extends Vue {
     const checkValue = (s: string) => {
       return s !== '' && s !== null
     }
-    const getTimeNumber = (s: string) => {
-      const tmp = s.split(' ')
-      const h = Number(tmp[0].split(':')[0])
-      const m = Number(tmp[0].split(':')[1])
-      const ap = tmp[1] === '午前' ? 0 : 1
-      return h * 60 + m + ap * 12 * 60
-    }
     if (!checkValue(this.startTime) || !checkValue(this.endingTime)) {
       this.errorTimeMessage = 'Fill start and ending time'
       return false
-    } else if (getTimeNumber(this.startTime) < getTimeNumber(this.endingTime)) {
+    } else if (this.getTimeNumber(this.startTime) < this.getTimeNumber(this.endingTime)) {
       this.errorTimeMessage = ''
       return true
     } else {
       this.errorTimeMessage = 'Incorrect start and ending time'
       return false
     }
+  }
+
+  get disabledHours () {
+    const disabledHours:string[] = []
+    const hours:number[] = Array.from(new Array(24)).map((v, i) => i)
+    const start = this.getTimeNumber(this.startTime)
+    const ending = this.getTimeNumber(this.endingTime)
+    for (let elm in hours) {
+      if ((Number(elm) * 60 < start || ending < Number(elm) * 60)) {
+        disabledHours.push(('00' + Number(elm)).slice(-2))
+      }
+    }
+    return disabledHours
   }
 }
 </script>

@@ -2,9 +2,9 @@ button:focus {
   outline: 0;
 }
 
-.home-picker {
+.excluded-date-picker {
   display: flex;
-  padding-bottom: 70px;
+  padding-bottom: 50px;
 }
  
 .add-exlclude-date-button {
