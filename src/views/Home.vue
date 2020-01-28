@@ -95,11 +95,12 @@ export default class Home extends Vue {
   addExcludedDate () {
     // Math.max.apply(null,gGpsData.map(function(o){return o.speed;}))
     let id = this.ExcludedDates.length === 0 ? 0 : Math.max.apply(null, this.ExcludedDates.map((elm) => { return elm.id }))
+    // dummy
     this.ExcludedDates.push({
       id: id + 1,
-      selectedDay: '',
-      startTime: '',
-      endingTime: ''
+      selectedDay: '2020-01-28',
+      startTime: '02:00 午前',
+      endingTime: '02:00 午後'
     })
   }
 
@@ -113,7 +114,8 @@ export default class Home extends Vue {
 
   updateExcludedDates = (item:ExcludedDateParams[], index:number) => {
     const newValue = [
-      ...this.ExcludedDates.slice(0, index), item,
+      ...this.ExcludedDates.slice(0, index),
+      item,
       ...this.ExcludedDates.slice(index + 1)
     ]
     this.$emit('input', newValue)
@@ -157,10 +159,6 @@ export default class Home extends Vue {
       this.errorTimeMessage = 'Incorrect start and ending time'
       return false
     }
-  }
-
-  get hoge () {
-    return ''
   }
 }
 </script>
