@@ -28,8 +28,8 @@
     <div v-if="areSelectedDates && areStartAndEndingTimesValid">
       <h2>Pick up  your not desired schedule date and time range</h2>
       <ExcludedDate
-        v-for="(ExcludedDateElm, index) in ExcludedDates" :key="ExcludedDateElm.id"
-        :value="ExcludedDates[index]" @input="ExcludedDates => updateExcludedDates(ExcludedDates, index)" v-bind:enabledDates="enabledDates"
+        v-for="(ExcludedDateElm) in ExcludedDates" :key="ExcludedDateElm.id"
+        v-bind:ExcludedDate="ExcludedDateElm" v-bind:enabledDates="enabledDates"
       />
       <button class="add-exlclude-date-button" v-on:click="addExcludedDate">
         <i class="fas fa-plus"></i>
@@ -98,9 +98,9 @@ export default class Home extends Vue {
     // dummy
     this.ExcludedDates.push({
       id: id + 1,
-      selectedDay: '2020-01-28',
-      startTime: '02:00 午前',
-      endingTime: '02:00 午後'
+      selectedDay: '',
+      startTime: '',
+      endingTime: ''
     })
   }
 
@@ -110,15 +110,6 @@ export default class Home extends Vue {
     const m = Number(tmp[0].split(':')[1])
     const ap = tmp[1] === '午前' ? 0 : 1
     return h * 60 + m + ap * 12 * 60
-  }
-
-  updateExcludedDates = (item:ExcludedDateParams[], index:number) => {
-    const newValue = [
-      ...this.ExcludedDates.slice(0, index),
-      item,
-      ...this.ExcludedDates.slice(index + 1)
-    ]
-    this.$emit('input', newValue)
   }
 
   /**
