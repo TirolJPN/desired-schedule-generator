@@ -37,6 +37,7 @@
       </button>
 
       <h3>for debug</h3>
+      <p>selectedRange:{{selectedRange}}</p>
       <p>enabledDates:{{enabledDates}}</p>
       <p>ExcludedDates:{{ExcludedDates}}</p>
     </div>
@@ -86,7 +87,6 @@ export default class Home extends Vue {
     // let d = ('00' + dt.getDate()).slice(-2)
     // this.selectedRange.start = y + '-' + m + '-' + d
     // this.selectedRange.end = y + '-' + m + '-' + d
-    // this.idList.push(0)
   }
 
   /**
@@ -127,10 +127,10 @@ export default class Home extends Vue {
     let day = new Date(this.selectedRange.start)
     let endDay = new Date(this.selectedRange.end)
     while (day.getTime() <= endDay.getTime()) {
-      const tmpElm:string = day.getFullYear() + '-' + ('00' + day.getMonth() + 1).slice(-2) + '-' + ('00' + day.getDate()).slice(-2)
+      const tmpElm:string = day.getFullYear() + '-' + ('00' + (day.getMonth() + 1)).slice(-2) + '-' + ('00' + day.getDate()).slice(-2)
       result.push(tmpElm)
       day.setDate(day.getDate() + 1)
-      const tmp:string = day.getFullYear() + '-' + ('00' + day.getMonth() + 1).slice(-2) + '-' + ('00' + day.getDate()).slice(-2)
+      const tmp:string = day.getFullYear() + '-' + ('00' + (day.getMonth() + 1)).slice(-2) + '-' + ('00' + day.getDate()).slice(-2)
       day = new Date(tmp)
     }
     return result
