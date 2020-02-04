@@ -1,7 +1,7 @@
 <template>
   <div class="home">
     <h1>Desired Schedule Generator</h1>
-    <h2>Pick up  your desired schedule date and time range</h2>
+    <h2>Desired schedule</h2>
     <p v-if="!areSelectedDates" class="error-message">Fill correct date range</p>
     <p v-if="!areStartAndEndingTimesValid" class="error-message">{{errorTimeMessage}}</p>
     <div class="home-picker">
@@ -26,9 +26,9 @@
 
     <!-- v-for of ExcludedDate components -->
     <div v-if="areSelectedDates && areStartAndEndingTimesValid">
-      <h2>Pick up  your not desired schedule date and time range</h2>
+      <h2>Not desired schedule</h2>
       <ExcludedDate
-        v-for="(ExcludedDateElm) in ExcludedDates" :key="ExcludedDateElm.id"
+        v-for="(ExcludedDateElm) in excludedDates" :key="ExcludedDateElm.id"
         v-bind:ExcludedDate="ExcludedDateElm" v-bind:enabledDates="enabledDates"
       />
       <button class="add-exlclude-date-button" v-on:click="addExcludedDate">
@@ -39,7 +39,8 @@
       <h3>for debug</h3>
       <p>selectedRange:{{selectedRange}}</p>
       <p>enabledDates:{{enabledDates}}</p>
-      <p>ExcludedDates:{{ExcludedDates}}</p>
+      <p>excludedDates:{{excludedDates}}</p>
+      <h3>{{scheduleOutput}}</h3>
     </div>
   </div>
 </template>
@@ -78,7 +79,7 @@ export default class Home extends Vue {
   selectedRange:DatepickerParams = { start: '', end: '' }
   startTime:string = ''
   endingTime:string = ''
-  ExcludedDates:ExcludedDateParams[] = []
+  excludedDates:ExcludedDateParams[] = []
 
   mounted () {
     // let dt = new Date()
@@ -94,14 +95,18 @@ export default class Home extends Vue {
    */
   addExcludedDate () {
     // Math.max.apply(null,gGpsData.map(function(o){return o.speed;}))
-    let id = this.ExcludedDates.length === 0 ? 0 : Math.max.apply(null, this.ExcludedDates.map((elm) => { return elm.id }))
+    let id = this.excludedDates.length === 0 ? 0 : Math.max.apply(null, this.excludedDates.map((elm) => { return elm.id }))
     // dummy
-    this.ExcludedDates.push({
+    this.excludedDates.push({
       id: id + 1,
       selectedDay: '',
       startTime: '',
       endingTime: ''
     })
+  }
+
+  checkStringEmptyNull = (s: string) => {
+    return s !== '' && s !== null
   }
 
   getTimeNumber = (s: string) => {
@@ -116,10 +121,7 @@ export default class Home extends Vue {
    * computed
    */
   get areSelectedDates () {
-    const checkValue = (s: string) => {
-      return s !== '' && s !== null
-    }
-    return checkValue(this.selectedRange.start) && checkValue(this.selectedRange.end)
+    return this.checkStringEmptyNull(this.selectedRange.start) && this.checkStringEmptyNull(this.selectedRange.end)
   }
 
   get enabledDates () {
@@ -127,20 +129,15 @@ export default class Home extends Vue {
     let day = new Date(this.selectedRange.start)
     let endDay = new Date(this.selectedRange.end)
     while (day.getTime() <= endDay.getTime()) {
-      const tmpElm:string = day.getFullYear() + '-' + ('00' + (day.getMonth() + 1)).slice(-2) + '-' + ('00' + day.getDate()).slice(-2)
-      result.push(tmpElm)
+      result.push(day.getFullYear() + '-' + ('00' + (day.getMonth() + 1)).slice(-2) + '-' + ('00' + day.getDate()).slice(-2))
       day.setDate(day.getDate() + 1)
-      const tmp:string = day.getFullYear() + '-' + ('00' + (day.getMonth() + 1)).slice(-2) + '-' + ('00' + day.getDate()).slice(-2)
-      day = new Date(tmp)
+      day = new Date(day.getFullYear() + '-' + ('00' + (day.getMonth() + 1)).slice(-2) + '-' + ('00' + day.getDate()).slice(-2))
     }
     return result
   }
 
   get areStartAndEndingTimesValid () {
-    const checkValue = (s: string) => {
-      return s !== '' && s !== null
-    }
-    if (!checkValue(this.startTime) || !checkValue(this.endingTime)) {
+    if (!this.checkStringEmptyNull(this.startTime) || !this.checkStringEmptyNull(this.endingTime)) {
       this.errorTimeMessage = 'Fill start and ending time'
       return false
     } else if (this.getTimeNumber(this.startTime) < this.getTimeNumber(this.endingTime)) {
@@ -150,6 +147,20 @@ export default class Home extends Vue {
       this.errorTimeMessage = 'Incorrect start and ending time'
       return false
     }
+  }
+
+  get scheduleOutput () {
+    const checkSchedule = function ( day:string, excludedDates:ExcludedDateParams[] ) {
+      let outputString: string = day.getFullYear() + '-' + ('00' + (day.getMonth() + 1)).slice(-2) + '-' + ('00' + day.getDate()).slice(-2)
+      for(let excludedDate of excludedDates) {
+        if( excludedDate.startTime !== '' && excludedDate.startTime !== null && excludedDate.endingTime !== '' && excludedDate.endingTime !== null ) {
+          return outputString += ''
+        } else {
+          return return outputString += ''
+        }
+      }
+    }
+    return ''
   }
 }
 </script>
