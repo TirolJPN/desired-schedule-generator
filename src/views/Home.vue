@@ -40,7 +40,7 @@
       <!-- <p>selectedRange:{{selectedRange}}</p>
       <p>enabledDates:{{enabledDates}}</p>
       <p>excludedDates:{{excludedDates}}</p> -->
-      <h3>{{scheduleOutput}}</h3>
+      <pre>{{scheduleOutput}}</pre>
     </div>
   </div>
 </template>
@@ -150,7 +150,8 @@ export default class Home extends Vue {
   }
 
   get scheduleOutput () {
-    const checkSchedule = function (date:string, excludedDates:ExcludedDateParams[]) {
+    const checkSchedule = (tmpOutputString:string, date:string) => {
+      let excludedDates:ExcludedDateParams[] = this.excludedDates
       let day = new Date(date)
       let outputString: string = day.getFullYear() + '-' + ('00' + (day.getMonth() + 1)).slice(-2) + '-' + ('00' + day.getDate()).slice(-2)
       let isIncludedDate = true
@@ -165,9 +166,11 @@ export default class Home extends Vue {
           }
         }
       }
-      return isIncludedDate ? outputString : ''
+      return tmpOutputString + (isIncludedDate ? outputString + '\n' : '')
     }
-    return checkSchedule(this.selectedRange.start, this.excludedDates)
+
+    const enabledDates = this.enabledDates
+    return enabledDates.reduce(checkSchedule, '')
   }
 }
 </script>
