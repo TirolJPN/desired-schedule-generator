@@ -37,9 +37,9 @@
       </button>
 
       <h3>for debug</h3>
-      <p>selectedRange:{{selectedRange}}</p>
+      <!-- <p>selectedRange:{{selectedRange}}</p>
       <p>enabledDates:{{enabledDates}}</p>
-      <p>excludedDates:{{excludedDates}}</p>
+      <p>excludedDates:{{excludedDates}}</p> -->
       <h3>{{scheduleOutput}}</h3>
     </div>
   </div>
@@ -150,17 +150,24 @@ export default class Home extends Vue {
   }
 
   get scheduleOutput () {
-    const checkSchedule = function ( day:string, excludedDates:ExcludedDateParams[] ) {
+    const checkSchedule = function (date:string, excludedDates:ExcludedDateParams[]) {
+      let day = new Date(date)
       let outputString: string = day.getFullYear() + '-' + ('00' + (day.getMonth() + 1)).slice(-2) + '-' + ('00' + day.getDate()).slice(-2)
-      for(let excludedDate of excludedDates) {
-        if( excludedDate.startTime !== '' && excludedDate.startTime !== null && excludedDate.endingTime !== '' && excludedDate.endingTime !== null ) {
-          return outputString += ''
-        } else {
-          return return outputString += ''
+      let isIncludedDate = true
+      for (let excludedDate of excludedDates) {
+        if (Math.floor(new Date(excludedDate.selectedDay).getTime() / (1000 * 60 * 60 * 24)) === Math.floor(day.getTime() / (1000 * 60 * 60 * 24))) {
+          if (excludedDate.startTime !== '' && excludedDate.startTime !== null && excludedDate.endingTime !== '' && excludedDate.endingTime !== null) {
+            // 時間情報の文字列生成
+            outputString += '無理'
+            isIncludedDate = true
+          } else {
+            isIncludedDate = false
+          }
         }
       }
+      return isIncludedDate ? outputString : ''
     }
-    return ''
+    return checkSchedule(this.selectedRange.start, this.excludedDates)
   }
 }
 </script>
