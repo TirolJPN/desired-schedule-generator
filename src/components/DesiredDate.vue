@@ -2,20 +2,23 @@
 <div>
   <p v-if="!isSelectedDate" class="error-message">select date</p>
   <p v-if="!areStartAndEndingTimesValid" class="error-message">{{errorTimeMessage}}</p>
-  <div class="excluded-date-picker">
+  <div class="desired-date-picker">
     <VueCtkDateTimePicker
-      v-model="ExcludedDate.selectedDay" v-bind:enabledDates="enabledDates" v-bind:format="'YYYY-MM-DD'" v-bind:formatted="'ll'" v-bind:onlyDate="true"
+      v-model="desiredDate.selectedDay" v-bind:format="'YYYY-MM-DD'" v-bind:formatted="'ll'" v-bind:onlyDate="true"
     />
     <VueCtkDateTimePicker
       id="start-time-picker" v-bind:label="'Select start time'"
-      v-model="ExcludedDate.startTime" v-bind:no-label="true" v-bind:only-time="true"
+      v-model="desiredDate.startTime" v-bind:no-label="true" v-bind:only-time="true"
       v-bind:format="'HH:mm'" v-bind:formatted="'HH:mm'" v-bind:minute-interval="10"
     />
     <VueCtkDateTimePicker
       id="ending-time-picker" v-bind:label="'Select ending time'"
-      v-model="ExcludedDate.endingTime" v-bind:no-label="true" v-bind:only-time="true"
+      v-model="desiredDate.endingTime" v-bind:no-label="true" v-bind:only-time="true"
       v-bind:format="'HH:mm'" v-bind:formatted="'HH:mm'" v-bind:minute-interval="10"
     />
+    <button class="delete-desired-date-button">
+      <i class="fas fa-trash-alt"></i>
+    </button>
   </div>
 </div>
 </template>
@@ -23,10 +26,10 @@
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator'
 import 'vue-ctk-date-time-picker/dist/vue-ctk-date-time-picker.css'
-import '@/assets/stylesheets/excludedDate.css'
+import '@/assets/stylesheets/desiredDate.css'
 const VueCtkDateTimePicker = require('vue-ctk-date-time-picker')
 
-interface ExcludedDateParams{
+interface desiredDateParams{
   id: number,
   selectedDay:string,
   startTime:string,
@@ -40,10 +43,8 @@ interface ExcludedDateParams{
 })
 
 export default class VueCtkDateTime extends Vue {
-  @Prop({ default: [] })
-  enabledDates!: string[]
   @Prop({ default: () => {} })
-  ExcludedDate!:ExcludedDateParams
+  desiredDate!:desiredDateParams
 
   /**
    * data
@@ -54,7 +55,7 @@ export default class VueCtkDateTime extends Vue {
     const checkValue = (s: string) => {
       return s !== '' && s !== null
     }
-    return checkValue(this.ExcludedDate.selectedDay)
+    return checkValue(this.desiredDate.selectedDay)
   }
 
   get areStartAndEndingTimesValid () {
@@ -68,10 +69,10 @@ export default class VueCtkDateTime extends Vue {
       const ap = tmp[1] === '午前' ? 0 : 1
       return h * 60 + m + ap * 12 * 60
     }
-    if (!checkValue(this.ExcludedDate.startTime) || !checkValue(this.ExcludedDate.endingTime)) {
+    if (!checkValue(this.desiredDate.startTime) || !checkValue(this.desiredDate.endingTime)) {
       this.errorTimeMessage = 'Fill start and ending time'
       return false
-    } else if (getTimeNumber(this.ExcludedDate.startTime) < getTimeNumber(this.ExcludedDate.endingTime)) {
+    } else if (getTimeNumber(this.desiredDate.startTime) < getTimeNumber(this.desiredDate.endingTime)) {
       this.errorTimeMessage = ''
       return true
     } else {

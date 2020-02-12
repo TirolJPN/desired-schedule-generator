@@ -7,7 +7,7 @@ button:focus {
   padding-bottom: 70px;
 }
  
-.add-exlclude-date-button {
+.add-desired-date-button {
   border: none;
   color: white;
   padding: 16px 32px;
@@ -23,7 +23,7 @@ button:focus {
   background-color: white;
   color: #888;
 }
-.add-exlclude-date-button:hover {
+.add-desired-date-button:hover {
   background-color: #888;
   color: white;
 }
