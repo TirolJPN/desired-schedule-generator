@@ -9,12 +9,12 @@
     <VueCtkDateTimePicker
       id="start-time-picker" v-bind:label="'Select start time'"
       v-model="ExcludedDate.startTime" v-bind:no-label="true" v-bind:only-time="true"
-      v-bind:format="'hh:mm a'" v-bind:formatted="'hh:mm a'" v-bind:minute-interval="10"
+      v-bind:format="'HH:mm'" v-bind:formatted="'HH:mm'" v-bind:minute-interval="10"
     />
     <VueCtkDateTimePicker
       id="ending-time-picker" v-bind:label="'Select ending time'"
       v-model="ExcludedDate.endingTime" v-bind:no-label="true" v-bind:only-time="true"
-      v-bind:format="'hh:mm a'" v-bind:formatted="'hh:mm a'" v-bind:minute-interval="10"
+      v-bind:format="'HH:mm'" v-bind:formatted="'HH:mm'" v-bind:minute-interval="10"
     />
   </div>
 </div>

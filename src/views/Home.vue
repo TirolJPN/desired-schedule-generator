@@ -15,12 +15,12 @@
       <VueCtkDateTimePicker
         id="start-time-picker" v-bind:label="'Select start time'"
         v-model="startTime" v-bind:no-label="true" v-bind:only-time="true"
-        v-bind:format="'hh:mm a'"  v-bind:formatted="'hh:mm a'" v-bind:minute-interval="10"
+        v-bind:format="'HH:mm'"  v-bind:formatted="'HH:mm'" v-bind:minute-interval="10"
       />
       <VueCtkDateTimePicker
         id="ending-time-picker" v-bind:label="'Select ending time'"
         v-model="endingTime" v-bind:no-label="true" v-bind:only-time="true"
-        v-bind:format="'hh:mm a'" v-bind:formatted="'hh:mm a'" v-bind:minute-interval="10"
+        v-bind:format="'HH:mm'" v-bind:formatted="'HH:mm'" v-bind:minute-interval="10"
       />
     </div>
 
@@ -37,9 +37,9 @@
       </button>
 
       <h3>for debug</h3>
-      <!-- <p>selectedRange:{{selectedRange}}</p>
-      <p>enabledDates:{{enabledDates}}</p>
-      <p>excludedDates:{{excludedDates}}</p> -->
+      <!-- <p>selectedRange:{{selectedRange}}</p> -->
+      <!-- <p>enabledDates:{{enabledDates}}</p> -->
+      <p>excludedDates:{{excludedDates}}</p>
       <pre>{{scheduleOutput}}</pre>
     </div>
   </div>
@@ -81,22 +81,12 @@ export default class Home extends Vue {
   endingTime:string = ''
   excludedDates:ExcludedDateParams[] = []
 
-  mounted () {
-    // let dt = new Date()
-    // let y = dt.getFullYear()
-    // let m = ('00' + (dt.getMonth() + 1)).slice(-2)
-    // let d = ('00' + dt.getDate()).slice(-2)
-    // this.selectedRange.start = y + '-' + m + '-' + d
-    // this.selectedRange.end = y + '-' + m + '-' + d
-  }
-
   /**
    * methods
    */
   addExcludedDate () {
     // Math.max.apply(null,gGpsData.map(function(o){return o.speed;}))
     let id = this.excludedDates.length === 0 ? 0 : Math.max.apply(null, this.excludedDates.map((elm) => { return elm.id }))
-    // dummy
     this.excludedDates.push({
       id: id + 1,
       selectedDay: '',
@@ -113,8 +103,7 @@ export default class Home extends Vue {
     const tmp = s.split(' ')
     const h = Number(tmp[0].split(':')[0])
     const m = Number(tmp[0].split(':')[1])
-    const ap = tmp[1] === '午前' ? 0 : 1
-    return h * 60 + m + ap * 12 * 60
+    return h * 60 + m
   }
 
   /**
@@ -150,9 +139,14 @@ export default class Home extends Vue {
   }
 
   get scheduleOutput () {
-    const checkSchedule = (tmpOutputString:string, date:string) => {
+    /**
+     * checkSchedule
+     * accumulator: コールバックの返り値の累積
+     * currentValue: 現在処理中の要素の値
+     */
+    const checkSchedule = (accumulator:string, currentValue:string) => {
       let excludedDates:ExcludedDateParams[] = this.excludedDates
-      let day = new Date(date)
+      let day = new Date(currentValue)
       let outputString: string = day.getFullYear() + '-' + ('00' + (day.getMonth() + 1)).slice(-2) + '-' + ('00' + day.getDate()).slice(-2)
       let isIncludedDate = true
       for (let excludedDate of excludedDates) {
@@ -166,7 +160,7 @@ export default class Home extends Vue {
           }
         }
       }
-      return tmpOutputString + (isIncludedDate ? outputString + '\n' : '')
+      return accumulator + (isIncludedDate ? outputString + '\n' : '')
     }
 
     const enabledDates = this.enabledDates
