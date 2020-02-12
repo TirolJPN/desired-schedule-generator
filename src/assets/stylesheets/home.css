@@ -32,3 +32,25 @@ button:focus {
   font-size: 20px;
   color: red;
 }
+
+.transition-parent {
+  position: relative;
+}
+
+.desired-date-list-enter-active, .desired-date-list-leave-active, .desired-date-list-move {
+  transition: opacity 1s, transform 1s;
+}
+
+.desired-date-list-leave-active {
+  position: absolute;
+}
+
+.desired-date-list-enter {
+  opacity: 0;
+  transform: translateY(-70px);
+}
+
+.desired-date-list-leave-to {
+  opacity: 0;
+  transform: translateX(50vw);
+}

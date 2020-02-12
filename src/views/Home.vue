@@ -1,11 +1,16 @@
 <template>
   <div class="home">
     <h2>Desired schedule</h2>
-    <div v-for="(desiredDate) in desiredDates" :key="desiredDate.id">
-      <DesiredDate
-        v-bind:desiredDate="desiredDate" @eventDeleteDesiredDate=deleteDesiredDate
-      />
-    </div>
+    <transition-group class="transition-parent" name="desired-date-list" tag="div">
+      <div
+        v-for="(desiredDate) in desiredDates"
+        :key="desiredDate.id"
+      >
+        <DesiredDate
+          v-bind:desiredDate="desiredDate" @eventDeleteDesiredDate=deleteDesiredDate
+        />
+      </div>
+    </transition-group>
     <button class="add-desired-date-button" v-on:click="addDesiredDate">
       <i class="fas fa-plus"></i>
       Add Desired Date
