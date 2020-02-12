@@ -3,7 +3,7 @@
     <h2>Desired schedule</h2>
     <div v-for="(desiredDate) in desiredDates" :key="desiredDate.id">
       <DesiredDate
-        v-bind:desiredDate="desiredDate"
+        v-bind:desiredDate="desiredDate" @eventDeleteDesiredDate=deleteDesiredDate
       />
     </div>
     <button class="add-desired-date-button" v-on:click="addDesiredDate">
@@ -69,6 +69,14 @@ export default class Home extends Vue {
       startTime: latestDesiredDate.startTime,
       endingTime: latestDesiredDate.endingTime
     })
+  }
+
+  deleteDesiredDate (id: number) {
+    if (this.desiredDates.some(e => e.id === id) && this.desiredDates.length > 1) {
+      const index = this.desiredDates.findIndex((e) => e.id === id)
+      this.desiredDates.splice(index, 1)
+    }
+    console.log('delete ' + id)
   }
 
   getTimeNumber = (s: string) => {

@@ -1,7 +1,7 @@
 <template>
 <div>
-  <p v-if="!isSelectedDate" class="error-message">select date</p>
-  <p v-if="!areStartAndEndingTimesValid" class="error-message">{{errorTimeMessage}}</p>
+  <p v-if="!isSelectedDate" class="error-message">日付を入力してください</p>
+  <p v-if="!areStartAndEndingTimesValid" class="error-message">時間の値が不正です</p>
   <div class="desired-date-picker">
     <VueCtkDateTimePicker
       v-model="desiredDate.selectedDay" v-bind:format="'YYYY-MM-DD'" v-bind:formatted="'ll'" v-bind:onlyDate="true"
@@ -16,7 +16,7 @@
       v-model="desiredDate.endingTime" v-bind:no-label="true" v-bind:only-time="true"
       v-bind:format="'HH:mm'" v-bind:formatted="'HH:mm'" v-bind:minute-interval="10"
     />
-    <button class="delete-desired-date-button">
+    <button class="delete-desired-date-button" v-on:click="commitDeleteDesiredDate(desiredDate.id)">
       <i class="fas fa-trash-alt"></i>
     </button>
   </div>
@@ -24,7 +24,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator'
+import { Component, Prop, Vue, Emit } from 'vue-property-decorator'
 import 'vue-ctk-date-time-picker/dist/vue-ctk-date-time-picker.css'
 import '@/assets/stylesheets/desiredDate.css'
 const VueCtkDateTimePicker = require('vue-ctk-date-time-picker')
@@ -46,10 +46,10 @@ export default class VueCtkDateTime extends Vue {
   @Prop({ default: () => {} })
   desiredDate!:desiredDateParams
 
-  /**
-   * data
-   */
   errorTimeMessage:string = ''
+
+  @Emit('eventDeleteDesiredDate')
+  commitDeleteDesiredDate (id: number): void {}
 
   get isSelectedDate () {
     const checkValue = (s: string) => {
@@ -63,22 +63,14 @@ export default class VueCtkDateTime extends Vue {
       return s !== '' && s !== null
     }
     const getTimeNumber = (s: string) => {
-      const tmp = s.split(' ')
-      const h = Number(tmp[0].split(':')[0])
-      const m = Number(tmp[0].split(':')[1])
-      const ap = tmp[1] === '午前' ? 0 : 1
-      return h * 60 + m + ap * 12 * 60
+      const h = Number(s.split(':')[0])
+      const m = Number(s.split(':')[1])
+      return h * 60 + m
     }
-    if (!checkValue(this.desiredDate.startTime) || !checkValue(this.desiredDate.endingTime)) {
-      this.errorTimeMessage = 'Fill start and ending time'
-      return false
-    } else if (getTimeNumber(this.desiredDate.startTime) < getTimeNumber(this.desiredDate.endingTime)) {
-      this.errorTimeMessage = ''
-      return true
-    } else {
-      this.errorTimeMessage = 'Incorrect start and ending time'
+    if (getTimeNumber(this.desiredDate.startTime) >= getTimeNumber(this.desiredDate.endingTime)) {
       return false
     }
+    return true
   }
 }
 </script>
