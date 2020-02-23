@@ -30,7 +30,7 @@ button:focus {
 
 .error-message {
   font-size: 20px;
-  color: red;
+  color: #b00;
 }
 
 .transition-parent {

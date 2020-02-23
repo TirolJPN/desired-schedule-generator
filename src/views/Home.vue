@@ -1,6 +1,10 @@
 <template>
   <div class="home">
-    <h2>Desired schedule</h2>
+    <h1>Desired schedule</h1>
+    <button class="add-desired-date-button" v-on:click="addDesiredDate">
+      <i class="fas fa-plus"></i>
+      Add Desired Date
+    </button>
     <transition-group class="transition-parent" name="desired-date-list" tag="div">
       <div
         v-for="(desiredDate) in desiredDates"
@@ -11,10 +15,6 @@
         />
       </div>
     </transition-group>
-    <button class="add-desired-date-button" v-on:click="addDesiredDate">
-      <i class="fas fa-plus"></i>
-      Add Desired Date
-    </button>
     <h3>for debug</h3>
     <!-- <p>selectedRange:{{selectedRange}}</p> -->
     <!-- <p>enabledDates:{{enabledDates}}</p> -->
@@ -36,6 +36,10 @@ interface DesiredDateParams{
   selectedDay:string,
   startTime:string,
   endingTime:string,
+}
+
+interface ExtendedDesiredDateParams{
+  timeNumber: number
 }
 
 @Component({
@@ -84,20 +88,11 @@ export default class Home extends Vue {
     console.log('delete ' + id)
   }
 
-  getTimeNumber = (s: string) => {
-    const h = Number(s.split(':')[0])
-    const m = Number(s.split(':')[1])
-    return h * 60 + m
-  }
-
   /**
    * computed
    */
   get scheduleOutput () {
-    /**
-     * accumulator: コールバックの返り値の累積
-     * currentValue: 現在処理中の要素の値
-     */
+    // TODO: desiredDatesの各要素のselectedDayとstartTimeのパラメータで算出できるタイムスタンプ値でソートし、その順で表示
     const checkSchedule = (accumulator:string, currentValue:string) => {
       let desiredDates:DesiredDateParams[] = this.desiredDates
       let day = new Date(currentValue)
@@ -117,9 +112,21 @@ export default class Home extends Vue {
       return accumulator + (isIncludedDate ? outputString + '\n' : '')
     }
 
-    // const enabledDates = this.enabledDates
-    // return enabledDates.reduce(checkSchedule, '')
-    return ''
+    const sortDesiredDates = () => {
+      const sortDesiredDates = this.desiredDates.map(elm => {
+        let obj = {
+          id: elm.id,
+          selectedDay: elm.selectedDay,
+          startTime: elm.startTime,
+          endingTime: elm.endingTime,
+          dateNum: 0
+        }
+        return obj
+      })
+      return sortDesiredDates
+    }
+
+    return sortDesiredDates()
   }
 }
 </script>

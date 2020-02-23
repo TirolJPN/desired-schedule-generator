@@ -13,6 +13,7 @@ button:focus {
   -webkit-transition-duration: 0.4s; /* Safari */
   transition-duration: 0.4s;
   color: #888;
+  font-size: large;
 }
 .delete-desired-date-button:hover {
   color: #b00;
@@ -20,5 +21,5 @@ button:focus {
 
 .error-message {
   font-size: 20px;
-  color: red;
+  color: #b00;
 }

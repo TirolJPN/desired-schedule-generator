@@ -1,7 +1,7 @@
 <template>
 <div>
   <p v-if="!isSelectedDate" class="error-message">日付を入力してください</p>
-  <p v-if="!areStartAndEndingTimesValid" class="error-message">時間の値が不正です</p>
+  <p v-if="!areStartAndEndingTimesValid" class="error-message">時間の値を正しく設定してください</p>
   <div class="desired-date-picker">
     <VueCtkDateTimePicker
       v-model="desiredDate.selectedDay" v-bind:format="'YYYY-MM-DD'" v-bind:formatted="'ll'" v-bind:onlyDate="true"
@@ -24,7 +24,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue, Emit } from 'vue-property-decorator'
+import { Component, Prop, Vue, Emit, Watch } from 'vue-property-decorator'
 import 'vue-ctk-date-time-picker/dist/vue-ctk-date-time-picker.css'
 import '@/assets/stylesheets/desiredDate.css'
 const VueCtkDateTimePicker = require('vue-ctk-date-time-picker')
@@ -71,6 +71,20 @@ export default class VueCtkDateTime extends Vue {
       return false
     }
     return true
+  }
+
+  @Watch('desiredDate.startTime')
+  checkStartNull (old: desiredDateParams, newHoge: desiredDateParams) {
+    if (this.desiredDate.startTime === null) {
+      this.desiredDate.startTime = ''
+    }
+  }
+
+  @Watch('desiredDate.endingTime')
+  checkEndNull (old: desiredDateParams, newHoge: desiredDateParams) {
+    if (this.desiredDate.endingTime === null) {
+      this.desiredDate.endingTime = ''
+    }
   }
 }
 </script>
