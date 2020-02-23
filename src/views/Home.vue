@@ -1,10 +1,6 @@
 <template>
   <div class="home">
     <h1>Desired schedule</h1>
-    <button class="add-desired-date-button" v-on:click="addDesiredDate">
-      <i class="fas fa-plus"></i>
-      Add Desired Date
-    </button>
     <transition-group class="transition-parent" name="desired-date-list" tag="div">
       <div
         v-for="(desiredDate) in desiredDates"
@@ -15,11 +11,15 @@
         />
       </div>
     </transition-group>
+    <button class="add-desired-date-button" v-on:click="addDesiredDate">
+      <i class="fas fa-plus"></i>
+      Add Desired Date
+    </button>
     <h3>for debug</h3>
     <!-- <p>selectedRange:{{selectedRange}}</p> -->
     <!-- <p>enabledDates:{{enabledDates}}</p> -->
-    <p>desiredDates:{{desiredDates}}</p>
     <pre>{{scheduleOutput}}</pre>
+    <pre>{{result}}</pre>
   </div>
 </template>
 
@@ -92,41 +92,72 @@ export default class Home extends Vue {
    * computed
    */
   get scheduleOutput () {
-    // TODO: desiredDatesの各要素のselectedDayとstartTimeのパラメータで算出できるタイムスタンプ値でソートし、その順で表示
-    const checkSchedule = (accumulator:string, currentValue:string) => {
-      let desiredDates:DesiredDateParams[] = this.desiredDates
-      let day = new Date(currentValue)
-      let outputString: string = day.getFullYear() + '-' + ('00' + (day.getMonth() + 1)).slice(-2) + '-' + ('00' + day.getDate()).slice(-2)
-      let isIncludedDate = true
-      for (let desiredDate of desiredDates) {
-        if (Math.floor(new Date(desiredDate.selectedDay).getTime() / (1000 * 60 * 60 * 24)) === Math.floor(day.getTime() / (1000 * 60 * 60 * 24))) {
-          if (desiredDate.startTime !== '' && desiredDate.startTime !== null && desiredDate.endingTime !== '' && desiredDate.endingTime !== null) {
-            // 時間情報の文字列生成
-            outputString += '無理'
-            isIncludedDate = true
-          } else {
-            isIncludedDate = false
-          }
-        }
-      }
-      return accumulator + (isIncludedDate ? outputString + '\n' : '')
-    }
-
     const sortDesiredDates = () => {
       const sortDesiredDates = this.desiredDates.map(elm => {
+        let day = new Date(elm.selectedDay)
+        let dayNumber: number = Math.floor(new Date(elm.selectedDay).getTime() / (1000 * 60 * 60 * 24))
         let obj = {
           id: elm.id,
           selectedDay: elm.selectedDay,
           startTime: elm.startTime,
           endingTime: elm.endingTime,
-          dateNum: 0
+          dateNum: dayNumber
         }
         return obj
       })
       return sortDesiredDates
     }
 
-    return sortDesiredDates()
+    interface ExtendedDesiredDateParams extends DesiredDateParams {
+      dateNum: number
+    }
+
+    let sortedDesiredDates: ExtendedDesiredDateParams[] = sortDesiredDates().sort((a, b) => {
+      if (a.dateNum < b.dateNum) return -1
+      if (a.dateNum > b.dateNum) return 1
+      return 0
+    }).sort((a, b) => {
+      if (a.startTime.length < b.startTime.length) return -1
+      if (a.startTime.length > b.startTime.length) return 1
+      return 0
+    }).sort((a, b) => {
+      if (a.endingTime.length < b.endingTime.length) return -1
+      if (a.endingTime.length > b.endingTime.length) return 1
+      return 0
+    })
+
+    let result: string = ''
+    let isNeededContinue = true
+    let oldDayNumber = 0
+    for (let elm of sortedDesiredDates) {
+      let day = new Date(elm.selectedDay)
+      let count:number = sortedDesiredDates.filter((x) => { return x.dateNum === elm.dateNum }).length
+      if (count === 1) {
+        result += ('\n' + day.getFullYear() + '-' + ('00' + (day.getMonth() + 1)).slice(-2) + '-' + ('00' + day.getDate()).slice(-2) + ' ')
+        if (elm.startTime !== '' && elm.startTime !== null && elm.endingTime !== '' && elm.endingTime !== null) {
+          result += (elm.startTime + '~' + elm.endingTime)
+        } else {
+          result += '終日'
+        }
+      } else {
+        if (oldDayNumber !== elm.dateNum) {
+          oldDayNumber = elm.dateNum
+          isNeededContinue = true
+          result += ('\n' + day.getFullYear() + '-' + ('00' + (day.getMonth() + 1)).slice(-2) + '-' + ('00' + day.getDate()).slice(-2) + ' ')
+          if (elm.startTime !== '' && elm.startTime !== null && elm.endingTime !== '' && elm.endingTime !== null) {
+            result += (elm.startTime + '~' + elm.endingTime)
+          } else {
+            isNeededContinue = false
+            result += '終日'
+          }
+        } else if (isNeededContinue) {
+          result += (', ' + elm.startTime + '~' + elm.endingTime)
+        } else {
+          continue
+        }
+      }
+    }
+    return result
   }
 }
 </script>
