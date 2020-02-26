@@ -4,11 +4,12 @@
       <h1>
         Desired schedule
       </h1>
+
       <button class="about-button">
         <i class="far fa-question-circle"></i>
       </button>
     </div>
-    <div class="copybox">
+    <div class="copybox" v-tooltip="{ content: 'Copied!', trigger: 'click', autoHide: true }">
       <span class="box-title">copy to clipboard</span>
       <pre>{{scheduleOutput}}</pre>
     </div>
@@ -32,6 +33,9 @@ import '@/assets/stylesheets/home.css'
 import DesiredDate from '@/components/DesiredDate.vue'
 
 const VueCtkDateTimePicker = require('vue-ctk-date-time-picker')
+const VTooltip = require('v-tooltip')
+
+Vue.use(VTooltip)
 
 interface DesiredDateParams{
   id: number,
