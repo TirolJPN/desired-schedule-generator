@@ -4,15 +4,15 @@
   <p v-if="!areStartAndEndingTimesValid" class="error-message">時間の値を正しく設定してください</p>
   <div class="desired-date-picker">
     <VueCtkDateTimePicker
-      v-model="desiredDate.selectedDay" v-bind:format="'YYYY-MM-DD'" v-bind:formatted="'ll'" v-bind:onlyDate="true"
+      v-model="desiredDate.selectedDay" v-bind:label="'date'" v-bind:format="'YYYY-MM-DD'" v-bind:formatted="'ll'" v-bind:onlyDate="true"
     />
     <VueCtkDateTimePicker
-      id="start-time-picker" v-bind:label="'Select start time'"
+      id="start-time-picker" v-bind:label="'start time'"
       v-model="desiredDate.startTime" v-bind:no-label="true" v-bind:only-time="true"
       v-bind:format="'HH:mm'" v-bind:formatted="'HH:mm'" v-bind:minute-interval="10"
     />
     <VueCtkDateTimePicker
-      id="ending-time-picker" v-bind:label="'Select ending time'"
+      id="ending-time-picker" v-bind:label="'ending time'"
       v-model="desiredDate.endingTime" v-bind:no-label="true" v-bind:only-time="true"
       v-bind:format="'HH:mm'" v-bind:formatted="'HH:mm'" v-bind:minute-interval="10"
     />

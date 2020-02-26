@@ -1,25 +1,27 @@
 <template>
   <div class="home">
-    <h1>Desired schedule</h1>
+    <div class="title">
+      <h1>
+        Desired schedule
+      </h1>
+      <button class="about-button">
+        <i class="far fa-question-circle"></i>
+      </button>
+    </div>
+    <div class="copybox">
+      <span class="box-title">copy to clipboard</span>
+      <pre>{{scheduleOutput}}</pre>
+    </div>
     <transition-group class="transition-parent" name="desired-date-list" tag="div">
-      <div
-        v-for="(desiredDate) in desiredDates"
-        :key="desiredDate.id"
-      >
+      <div v-for="(desiredDate) in desiredDates" :key="desiredDate.id">
         <DesiredDate
-          v-bind:desiredDate="desiredDate" @eventDeleteDesiredDate=deleteDesiredDate
-        />
+          v-bind:desiredDate="desiredDate" @eventDeleteDesiredDate=deleteDesiredDate />
       </div>
     </transition-group>
     <button class="add-desired-date-button" v-on:click="addDesiredDate">
       <i class="fas fa-plus"></i>
       Add Desired Date
     </button>
-    <h3>for debug</h3>
-    <!-- <p>selectedRange:{{selectedRange}}</p> -->
-    <!-- <p>enabledDates:{{enabledDates}}</p> -->
-    <pre>{{scheduleOutput}}</pre>
-    <pre>{{result}}</pre>
   </div>
 </template>
 
@@ -57,9 +59,20 @@ export default class Home extends Vue {
   desiredDates:DesiredDateParams[] = []
 
   mounted () {
+    let day = new Date()
     this.desiredDates.push({
       id: 1,
-      selectedDay: '',
+      selectedDay: ('\n' + day.getFullYear() + '-' + ('00' + (day.getMonth() + 1)).slice(-2) + '-' + ('00' + day.getDate()).slice(-2) + ' '),
+      startTime: '',
+      endingTime: ''
+    })
+
+    day.setDate(day.getDate() + 1)
+    day = new Date(day.getFullYear() + '-' + ('00' + (day.getMonth() + 1)).slice(-2) + '-' + ('00' + day.getDate()).slice(-2))
+
+    this.desiredDates.push({
+      id: 2,
+      selectedDay: ('\n' + day.getFullYear() + '-' + ('00' + (day.getMonth() + 1)).slice(-2) + '-' + ('00' + day.getDate()).slice(-2) + ' '),
       startTime: '',
       endingTime: ''
     })
@@ -112,25 +125,19 @@ export default class Home extends Vue {
       dateNum: number
     }
 
-    let sortedDesiredDates: ExtendedDesiredDateParams[] = sortDesiredDates().sort((a, b) => {
-      if (a.dateNum < b.dateNum) return -1
-      if (a.dateNum > b.dateNum) return 1
-      return 0
-    }).sort((a, b) => {
-      if (a.startTime.length < b.startTime.length) return -1
-      if (a.startTime.length > b.startTime.length) return 1
-      return 0
-    }).sort((a, b) => {
-      if (a.endingTime.length < b.endingTime.length) return -1
-      if (a.endingTime.length > b.endingTime.length) return 1
-      return 0
-    })
+    let sortedDesiredDates: ExtendedDesiredDateParams[] = sortDesiredDates()
+      .sort((a, b) => a.dateNum - b.dateNum)
+      .sort((a, b) => a.startTime.length - b.startTime.length)
+      .sort((a, b) => a.endingTime.length - b.endingTime.length)
 
     let result: string = ''
     let isNeededContinue = true
     let oldDayNumber = 0
     for (let elm of sortedDesiredDates) {
       let day = new Date(elm.selectedDay)
+      if (day.toString() === 'Invalid Date') {
+        continue
+      }
       let count:number = sortedDesiredDates.filter((x) => { return x.dateNum === elm.dateNum }).length
       if (count === 1) {
         result += ('\n' + day.getFullYear() + '-' + ('00' + (day.getMonth() + 1)).slice(-2) + '-' + ('00' + day.getDate()).slice(-2) + ' ')
