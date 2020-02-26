@@ -2,12 +2,66 @@ button:focus {
   outline: 0;
 }
 
+.title {
+  /* padding-bottom: 50px; */
+  display: inline;
+}
+
+.about-button {
+  border: none;
+  background-color: white;
+  -webkit-transition-duration: 0.4s; /* Safari */
+  transition-duration: 0.4s;
+  color: #888;
+  font-size: large;
+}
+.about-button:hover {
+  color: #222;
+}
+
+.error-message {
+  font-size: 20px;
+  color: #b00;
+}
+
+.copybox {
+  position: relative;
+  margin: 2em 0;
+  padding: 0.5em 1em;
+  border: solid 3px #222222;
+  cursor: pointer;
+  transition: all 0.5s;
+}
+.copybox .box-title {
+  position: absolute;
+  display: inline-block;
+  top: -30px;
+  left: -3px;
+  padding: 0 9px;
+  height: 30px;
+  line-height: 25px;
+  font-size: 20px;
+  background: #222;
+  color: #ffffff;
+  font-weight: bold;
+  border-radius: 5px 5px 0 0;
+}
+.copybox pre {
+  margin: 0; 
+  padding: 0;
+  font-size: 20px;
+}
+
+.copybox:hover {
+  color: #4263eb;
+}
+
 .home-picker {
   display: flex;
   padding-bottom: 70px;
 }
  
-.add-exlclude-date-button {
+.add-desired-date-button {
   border: none;
   color: white;
   padding: 16px 32px;
@@ -23,12 +77,34 @@ button:focus {
   background-color: white;
   color: #888;
 }
-.add-exlclude-date-button:hover {
+.add-desired-date-button:hover {
   background-color: #888;
   color: white;
 }
 
 .error-message {
   font-size: 20px;
-  color: red;
+  color: #b00;
+}
+
+.transition-parent {
+  position: relative;
+}
+
+.desired-date-list-enter-active, .desired-date-list-leave-active, .desired-date-list-move {
+  transition: opacity 1s, transform 1s;
+}
+
+.desired-date-list-leave-active {
+  position: absolute;
+}
+
+.desired-date-list-enter {
+  opacity: 0;
+  transform: translateY(-70px);
+}
+
+.desired-date-list-leave-to {
+  opacity: 0;
+  transform: translateX(50vw);
 }

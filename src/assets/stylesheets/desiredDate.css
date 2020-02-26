@@ -1,0 +1,25 @@
+button:focus {
+  outline: 0;
+}
+
+.desired-date-picker {
+  display: flex;
+  padding-bottom: 30px;
+}
+ 
+.delete-desired-date-button {
+  border: none;
+  background-color: white;
+  -webkit-transition-duration: 0.4s; /* Safari */
+  transition-duration: 0.4s;
+  color: #888;
+  font-size: large;
+}
+.delete-desired-date-button:hover {
+  color: #b00;
+}
+
+.error-message {
+  font-size: 20px;
+  color: #b00;
+}
