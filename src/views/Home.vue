@@ -3,10 +3,10 @@
     <div class="title">
       <h1>
         Desired schedule
-      </h1>
-      <button class="about-button" @click="openModal()" >
+        <button class="about-button" @click="openModal()" >
         <i class="far fa-question-circle"></i>
       </button>
+      </h1>
       <About @close="closeModal()" v-if="modalFlag" />
     </div>
     <div class="copybox" v-tooltip="{ content: 'Copied!', trigger: 'click', autoHide: true }" @click="copyToClipboard()">
@@ -117,7 +117,6 @@ export default class Home extends Vue {
       const index = this.desiredDates.findIndex((e) => e.id === id)
       this.desiredDates.splice(index, 1)
     }
-    console.log('delete ' + id)
   }
 
   copyToClipboard () {
@@ -125,12 +124,6 @@ export default class Home extends Vue {
     if (copyText === null) return
     navigator.clipboard
       .writeText(copyText)
-      .then(() => {
-        console.log('finished to copy')
-      })
-      .catch(e => {
-        console.error(e)
-      })
   }
 
   /**
