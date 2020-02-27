@@ -60,32 +60,6 @@ button:focus {
   display: block !important;
   z-index: 10000;
 
-  opacity: 1 !important;
-  -moz-animation: cssAnimation 0s ease-in 1s forwards;
-  /* Firefox */
-  -webkit-animation: cssAnimation 0s ease-in 1s forwards;
-  /* Safari and Chrome */
-  -o-animation: cssAnimation 0s ease-in 1s forwards;
-  /* Opera */
-  animation: cssAnimation 0s ease-in 1s forwards;
-  -webkit-animation-fill-mode: forwards;
-  animation-fill-mode: forwards;
-}
-
-.tooltip:hover {
-  animation:none;
-}
-
-
-@keyframes cssAnimation {
-  to {
-    opacity: 0;
-  }
-}
-@-webkit-keyframes cssAnimation {
-  to {
-    opacity: 0;
-  }
 }
 
 .tooltip .tooltip-inner {
@@ -187,6 +161,7 @@ button:focus {
   visibility: visible;
   opacity: 1;
   transition: opacity .15s;
+
 }
 
 .home-picker {
