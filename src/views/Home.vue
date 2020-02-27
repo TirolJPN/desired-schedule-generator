@@ -2,7 +2,7 @@
   <div class="home">
     <div class="title">
       <h1>
-        Desired schedule
+        Desired Schedule
         <button class="about-button" @click="openModal()" >
         <i class="far fa-question-circle"></i>
       </button>
