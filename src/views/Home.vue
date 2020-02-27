@@ -4,14 +4,13 @@
       <h1>
         Desired schedule
       </h1>
-
       <button class="about-button">
         <i class="far fa-question-circle"></i>
       </button>
     </div>
-    <div class="copybox" v-tooltip="{ content: 'Copied!', trigger: 'click', autoHide: true }">
+    <div class="copybox" v-tooltip="{ content: 'Copied!', trigger: 'click', autoHide: true }" @click="copyToClipboard()">
       <span class="box-title">copy to clipboard</span>
-      <pre>{{scheduleOutput}}</pre>
+      <pre id="copy-target">{{scheduleOutput}}</pre>
     </div>
     <transition-group class="transition-parent" name="desired-date-list" tag="div">
       <div v-for="(desiredDate) in desiredDates" :key="desiredDate.id">
@@ -70,15 +69,19 @@ export default class Home extends Vue {
       startTime: '',
       endingTime: ''
     })
-
     day.setDate(day.getDate() + 1)
     day = new Date(day.getFullYear() + '-' + ('00' + (day.getMonth() + 1)).slice(-2) + '-' + ('00' + day.getDate()).slice(-2))
-
     this.desiredDates.push({
       id: 2,
       selectedDay: ('\n' + day.getFullYear() + '-' + ('00' + (day.getMonth() + 1)).slice(-2) + '-' + ('00' + day.getDate()).slice(-2) + ' '),
-      startTime: '',
-      endingTime: ''
+      startTime: '09:00',
+      endingTime: '12:00'
+    })
+    this.desiredDates.push({
+      id: 3,
+      selectedDay: ('\n' + day.getFullYear() + '-' + ('00' + (day.getMonth() + 1)).slice(-2) + '-' + ('00' + day.getDate()).slice(-2) + ' '),
+      startTime: '15:00',
+      endingTime: '18:00'
     })
   }
 
@@ -103,6 +106,19 @@ export default class Home extends Vue {
       this.desiredDates.splice(index, 1)
     }
     console.log('delete ' + id)
+  }
+
+  copyToClipboard () {
+    const copyText = this.$el.querySelector('#copy-target')!.textContent
+    if (copyText === null) return
+    navigator.clipboard
+      .writeText(copyText)
+      .then(() => {
+        console.log('finished to copy')
+      })
+      .catch(e => {
+        console.error(e)
+      })
   }
 
   /**
@@ -168,7 +184,7 @@ export default class Home extends Vue {
         }
       }
     }
-    return result
+    return result.slice(1)
   }
 }
 </script>
