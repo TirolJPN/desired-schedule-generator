@@ -3,14 +3,15 @@
     <div class="title">
       <h1>
         Desired schedule
-      </h1>
-      <button class="about-button">
+        <button class="about-button" @click="openModal()" >
         <i class="far fa-question-circle"></i>
       </button>
+      </h1>
+      <About @close="closeModal()" v-if="modalFlag" />
     </div>
-    <div class="copybox">
+    <div class="copybox" v-tooltip="{ content: 'Copied!', trigger: 'click', autoHide: true }" @click="copyToClipboard()">
       <span class="box-title">copy to clipboard</span>
-      <pre>{{scheduleOutput}}</pre>
+      <pre id="copy-target">{{scheduleOutput}}</pre>
     </div>
     <transition-group class="transition-parent" name="desired-date-list" tag="div">
       <div v-for="(desiredDate) in desiredDates" :key="desiredDate.id">
@@ -30,8 +31,12 @@ import { Component, Vue } from 'vue-property-decorator'
 import 'vue-ctk-date-time-picker/dist/vue-ctk-date-time-picker.css'
 import '@/assets/stylesheets/home.css'
 import DesiredDate from '@/components/DesiredDate.vue'
+import About from '@/components/About.vue'
 
 const VueCtkDateTimePicker = require('vue-ctk-date-time-picker')
+const VTooltip = require('v-tooltip')
+
+Vue.use(VTooltip)
 
 interface DesiredDateParams{
   id: number,
@@ -47,7 +52,8 @@ interface ExtendedDesiredDateParams{
 @Component({
   components: {
     VueCtkDateTimePicker,
-    DesiredDate
+    DesiredDate,
+    About
   }
 })
 
@@ -57,6 +63,7 @@ export default class Home extends Vue {
    */
   errorTimeMessage:string = ''
   desiredDates:DesiredDateParams[] = []
+  modalFlag:boolean = false
 
   mounted () {
     let day = new Date()
@@ -66,21 +73,33 @@ export default class Home extends Vue {
       startTime: '',
       endingTime: ''
     })
-
     day.setDate(day.getDate() + 1)
     day = new Date(day.getFullYear() + '-' + ('00' + (day.getMonth() + 1)).slice(-2) + '-' + ('00' + day.getDate()).slice(-2))
-
     this.desiredDates.push({
       id: 2,
       selectedDay: ('\n' + day.getFullYear() + '-' + ('00' + (day.getMonth() + 1)).slice(-2) + '-' + ('00' + day.getDate()).slice(-2) + ' '),
-      startTime: '',
-      endingTime: ''
+      startTime: '09:00',
+      endingTime: '12:00'
+    })
+    this.desiredDates.push({
+      id: 3,
+      selectedDay: ('\n' + day.getFullYear() + '-' + ('00' + (day.getMonth() + 1)).slice(-2) + '-' + ('00' + day.getDate()).slice(-2) + ' '),
+      startTime: '15:00',
+      endingTime: '18:00'
     })
   }
 
   /**
    * methods
    */
+  openModal () {
+    this.modalFlag = true
+  }
+
+  closeModal () {
+    this.modalFlag = false
+  }
+
   addDesiredDate () {
     // Math.max.apply(null,gGpsData.map(function(o){return o.speed;}))
     let id = this.desiredDates.length === 0 ? 0 : Math.max.apply(null, this.desiredDates.map((elm) => { return elm.id }))
@@ -98,7 +117,13 @@ export default class Home extends Vue {
       const index = this.desiredDates.findIndex((e) => e.id === id)
       this.desiredDates.splice(index, 1)
     }
-    console.log('delete ' + id)
+  }
+
+  copyToClipboard () {
+    const copyText = this.$el.querySelector('#copy-target')!.textContent
+    if (copyText === null) return
+    navigator.clipboard
+      .writeText(copyText)
   }
 
   /**
@@ -164,7 +189,7 @@ export default class Home extends Vue {
         }
       }
     }
-    return result
+    return result.slice(1)
   }
 }
 </script>
