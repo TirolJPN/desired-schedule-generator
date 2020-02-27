@@ -17,9 +17,3 @@ const router = new VueRouter({
 })
 
 export default router
-
-router.afterEach(
-  (to, from) => {
-    console.log('Called from ' + from.fullPath + ' to ' + to.fullPath)
-  }
-)
