@@ -8,6 +8,5 @@ This App decrease your wasting time to check your calendor using information of 
 ## Limitations
 Maybe work on any browser.
 
-## When is it released?
-To be developed.
-
+## Demo
+https://desired-schedule-generator.netlify.com
